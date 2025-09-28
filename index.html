@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="default.css"/> 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tic Tac Toe</title>
   <style>
@@ -32,11 +31,26 @@
                   -6px -6px 12px #1e1e1e;
       cursor: pointer;
       transition: all 0.2s ease;
+      animation: pulse 2s infinite ease-in-out;
     }
 
     button:hover {
       box-shadow: inset 6px 6px 12px #050505,
                   inset -6px -6px 12px #1e1e1e;
+      animation: none; /* Stop pulsing on hover */
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 6px 6px 12px #050505,
+                    -6px -6px 12px #1e1e1e;
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 8px 8px 16px #050505,
+                    -8px -8px 16px #1e1e1e;
+      }
     }
 
     .loading {
@@ -51,6 +65,14 @@
       gap: 10px;
       justify-content: center;
       margin-top: 20px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .board.show {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .cell {
@@ -77,6 +99,14 @@
       margin-top: 20px;
       font-size: 1.3rem;
       color: #4cafef;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .winner.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -105,6 +135,7 @@
       setTimeout(() => {
         loading.style.display = 'none';
         board.style.display = 'grid';
+        requestAnimationFrame(() => board.classList.add('show')); // fade-in
         initBoard();
       }, 1500);
     });
@@ -114,6 +145,7 @@
       cells = Array(9).fill(null);
       gameActive = true;
       winnerText.textContent = '';
+      winnerText.classList.remove('show');
 
       for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div');
@@ -131,12 +163,14 @@
 
       if (checkWin()) {
         winnerText.textContent = `${currentPlayer} Wins! 🎉`;
+        winnerText.classList.add('show');
         gameActive = false;
         return;
       }
 
       if (!cells.includes(null)) {
         winnerText.textContent = "It's a Draw!";
+        winnerText.classList.add('show');
         gameActive = false;
         return;
       }
