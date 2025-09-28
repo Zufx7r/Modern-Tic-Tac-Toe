@@ -1,19 +1,20 @@
 :root {
-  --bg: hsl(0 0% 98%);
-  --card-bg: hsl(0 0% 100%);
-  --border: hsl(240 5% 90%);
-  --text: hsl(240 10% 3.9%);
-  --text-muted: hsl(240 5% 40%);
-  --primary: hsl(240 5% 15%);
-  --primary-hover: hsl(240 5% 10%);
-  --x: hsl(0 84% 60%);
-  --o: hsl(217 91% 60%);
-  --win: hsl(142 72% 29%);
+  --bg-dark: hsl(240 5% 10%);
+  --bg: hsl(240 5% 15%);
+  --card-bg: hsl(240 5% 20%);
+  --border: hsl(240 5% 30%);
+  --text: hsl(0 0% 95%);
+  --text-muted: hsl(0 0% 70%);
+  --primary: hsl(240 5% 50%);
+  --primary-hover: hsl(240 5% 40%);
+  --x: hsl(0 84% 60%);    /* red */
+  --o: hsl(217 91% 60%);  /* blue */
+  --win: hsl(142 72% 29%); /* green */
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg);
+  background-color: var(--bg-dark);
   color: var(--text);
   display: flex;
   justify-content: center;
@@ -24,21 +25,18 @@ body {
 }
 
 .container {
-  background: var(--card-bg);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   padding: 28px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 380px;
-  width: 100%;
   text-align: center;
+  max-width: 400px;
+  width: 100%;
 }
 
 h1 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   margin-bottom: 20px;
   font-weight: 600;
   color: var(--text);
@@ -47,9 +45,9 @@ h1 {
 .game-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  gap: 8px;
   width: 100%;
-  max-width: 300px;
+  max-width: 360px;
   justify-items: center;
   margin-bottom: 20px;
 }
@@ -59,19 +57,19 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.3rem;
+  font-size: 2.6rem;
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
   border: 1px solid var(--border);
   border-radius: 8px;
   transition: background-color 0.15s ease-in-out, transform 0.1s;
-  aspect-ratio: 1; /* makes cell square */
-  width: 30%; /* responsive width */
+  aspect-ratio: 1;
+  width: 32%;
 }
 
 .cell:hover:not(.x):not(.o) {
-  background-color: hsl(240 5% 96%);
+  background-color: var(--primary-hover);
 }
 
 .cell.x {
@@ -88,7 +86,7 @@ h1 {
 }
 
 .game-status {
-  font-size: 0.95rem;
+  font-size: 1rem;
   margin: 12px 0;
   font-weight: 500;
   color: var(--text-muted);
@@ -121,9 +119,10 @@ h1 {
 
 @media (max-width: 420px) {
   .game-board {
-    max-width: 240px;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
   }
   .cell {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
 }
