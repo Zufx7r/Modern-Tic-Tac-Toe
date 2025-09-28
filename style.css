@@ -1,15 +1,24 @@
 :root {
-  --bg-color: #1e1e1e;
-  --cell-bg: #2c2c2c;
-  --cell-hover: #3a3a3a;
-  --text-color: #f5f5f5;
-  --accent-color: #00c896;
+  --bg-dark: oklch(0.1 0 210);
+  --bg: oklch(0.15 0 210);
+  --bg-light: oklch(0.2 0 210);
+  --text: oklch(0.96 0 210);
+  --text-muted: oklch(0.76 0 210);
+  --highlight: oklch(0.5 0 210);
+  --border: oklch(0.4 0 210);
+  --border-muted: oklch(0.3 0 210);
+  --primary: oklch(0.76 0.1 210);
+  --secondary: oklch(0.76 0.1 30);
+  --danger: oklch(0.7 0.05 30);
+  --warning: oklch(0.7 0.05 100);
+  --success: oklch(0.7 0.05 160);
+  --info: oklch(0.7 0.05 260);
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--bg-dark);
+  color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,16 +28,17 @@ body {
 
 .container {
   text-align: center;
-  background: #242424;
+  background: var(--bg);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px var(--border-muted);
+  border: 1px solid var(--border);
 }
 
 h1 {
   margin-bottom: 20px;
   font-size: 2.2em;
-  color: var(--accent-color);
+  color: var(--primary);
 }
 
 .game-board {
@@ -40,41 +50,43 @@ h1 {
 }
 
 .cell {
-  background-color: var(--cell-bg);
+  background-color: var(--bg-light);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2.5em;
   font-weight: bold;
-  color: var(--text-color);
+  color: var(--text);
   cursor: pointer;
   border-radius: 8px;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, transform 0.1s;
+  border: 1px solid var(--border-muted);
 }
 
 .cell:hover {
-  background-color: var(--cell-hover);
+  background-color: var(--highlight);
+  transform: scale(1.05);
 }
 
 .game-status {
   margin: 15px 0;
   font-size: 1.1em;
   font-weight: 600;
+  color: var(--text-muted);
 }
 
 .reset-button,
 .mode-button {
-  background-color: #4a4a4a;
-  color: var(--text-color);
+  background-color: var(--secondary);
+  color: var(--text);
   border: none;
   padding: 12px 20px;
   border-radius: 6px;
   font-size: 1em;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  align-self: stretch;
+  transition: background-color 0.2s ease-in-out, transform 0.1s;
+  box-shadow: 0 2px 5px var(--border-muted);
   margin-top: 8px;
   display: block;
   width: 100%;
@@ -82,12 +94,12 @@ h1 {
 
 .reset-button:hover,
 .mode-button:hover {
-  background-color: #5a5a5a;
+  background-color: var(--primary);
   transform: translateY(-1px);
 }
 
 .reset-button:active,
 .mode-button:active {
   transform: translateY(0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px var(--border);
 }
