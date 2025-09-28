@@ -8,26 +8,35 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameActive = true;
 
     const winningConditions = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-        [0, 4, 8], [2, 4, 6]             // Diagonals
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+        [0, 4, 8], [2, 4, 6]
     ];
+
+    async function getAIMove(board, player) {
+        const res = await fetch(
+            "https://neoxsite.netlify.app/.netlify/functions/tictactoe", 
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ board, player })
+            }
+        );
+        return await res.json();
+    }
 
     function handleResultValidation() {
         let roundWon = false;
         for (let i = 0; i < winningConditions.length; i++) {
-            const winCondition = winningConditions[i];
-            let a = board[winCondition[0]];
-            let b = board[winCondition[1]];
-            let c = board[winCondition[2]];
+            const [aIndex, bIndex, cIndex] = winningConditions[i];
+            let a = board[aIndex];
+            let b = board[bIndex];
+            let c = board[cIndex];
 
-            if (a === '' || b === '' || c === '') {
-                continue;
-            }
+            if (a === '' || b === '' || c === '') continue;
             if (a === b && b === c) {
                 roundWon = true;
-                // Highlight winning cells
-                winCondition.forEach(index => cells[index].classList.add('winning'));
+                [aIndex, bIndex, cIndex].forEach(i => cells[i].classList.add('winning'));
                 break;
             }
         }
@@ -35,29 +44,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (roundWon) {
             gameStatus.textContent = `Player ${currentPlayer} has won!`;
             isGameActive = false;
-            return;
+            return true;
         }
 
         if (!board.includes('')) {
             gameStatus.textContent = 'It\'s a draw!';
             isGameActive = false;
-            return;
+            return true;
         }
 
-        changePlayer();
+        return false;
     }
 
-    function changePlayer() {
+    async function changePlayer() {
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
         gameStatus.textContent = `Player ${currentPlayer}'s Turn`;
+
+        // If it's AI's turn
+        if (currentPlayer === 'O' && isGameActive) {
+            const { bestMove } = await getAIMove(board, currentPlayer);
+            const cell = cells[bestMove];
+            if (cell && board[bestMove] === '') {
+                board[bestMove] = currentPlayer;
+                cell.textContent = currentPlayer;
+                cell.classList.add(currentPlayer.toLowerCase());
+                if (!handleResultValidation()) {
+                    changePlayer();
+                }
+            }
+        }
     }
 
     function userAction(cell, index) {
         if (isGameActive && board[index] === '') {
             board[index] = currentPlayer;
             cell.textContent = currentPlayer;
-            cell.classList.add(currentPlayer.toLowerCase()); // Add 'x' or 'o' class for styling
-            handleResultValidation();
+            cell.classList.add(currentPlayer.toLowerCase());
+            if (!handleResultValidation()) {
+                changePlayer();
+            }
         }
     }
 
@@ -69,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cells.forEach(cell => {
             cell.textContent = '';
-            cell.classList.remove('x', 'o', 'winning'); // Remove all player and winning classes
+            cell.classList.remove('x', 'o', 'winning');
         });
     }
 
