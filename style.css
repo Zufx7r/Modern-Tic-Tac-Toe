@@ -1,44 +1,42 @@
 :root {
-  --bg-dark: oklch(0.1 0 210);
-  --bg: oklch(0.15 0 210);
-  --bg-light: oklch(0.2 0 210);
-  --text: oklch(0.96 0 210);
-  --text-muted: oklch(0.76 0 210);
-  --highlight: oklch(0.5 0 210);
-  --border: oklch(0.4 0 210);
-  --border-muted: oklch(0.3 0 210);
-  --primary: oklch(0.76 0.1 210);
-  --secondary: oklch(0.76 0.1 30);
-  --danger: oklch(0.7 0.05 30);
-  --warning: oklch(0.7 0.05 100);
-  --success: oklch(0.7 0.05 160);
-  --info: oklch(0.7 0.05 260);
+  --bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --text: #212529;
+  --text-muted: #6c757d;
+  --primary: #0d6efd;
+  --border: #dee2e6;
+  --win: #198754;
+  --danger: #dc3545;
+  --info: #0dcaf0;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg-dark);
+  background-color: var(--bg);
   color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
+  padding: 20px;
 }
 
 .container {
-  text-align: center;
-  background: var(--bg);
+  background: var(--card-bg);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px var(--border-muted);
-  border: 1px solid var(--border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
 }
 
 h1 {
+  font-size: 2em;
   margin-bottom: 20px;
-  font-size: 2.2em;
-  color: var(--primary);
+  font-weight: 700;
+  color: var(--text);
 }
 
 .game-board {
@@ -46,11 +44,11 @@ h1 {
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
   gap: 8px;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
 }
 
 .cell {
-  background-color: var(--bg-light);
+  background-color: var(--bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,48 +56,67 @@ h1 {
   font-weight: bold;
   color: var(--text);
   cursor: pointer;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  transition: background-color 0.2s ease-in-out, transform 0.1s;
-  border: 1px solid var(--border-muted);
+  transition: background-color 0.15s ease-in-out, transform 0.1s;
 }
 
-.cell:hover {
-  background-color: var(--highlight);
-  transform: scale(1.05);
+.cell:hover:not(.x):not(.o) {
+  background-color: var(--info);
+  color: #fff;
+}
+
+.cell.x {
+  color: var(--danger);
+}
+
+.cell.o {
+  color: var(--primary);
+}
+
+.cell.winning {
+  background-color: var(--win);
+  color: #fff;
 }
 
 .game-status {
-  margin: 15px 0;
   font-size: 1.1em;
-  font-weight: 600;
+  margin: 15px 0;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
 .reset-button,
 .mode-button {
-  background-color: var(--secondary);
-  color: var(--text);
+  background-color: var(--primary);
+  color: #fff;
   border: none;
   padding: 12px 20px;
   border-radius: 6px;
   font-size: 1em;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, transform 0.1s;
-  box-shadow: 0 2px 5px var(--border-muted);
-  margin-top: 8px;
-  display: block;
   width: 100%;
+  margin-top: 8px;
 }
 
 .reset-button:hover,
 .mode-button:hover {
-  background-color: var(--primary);
-  transform: translateY(-1px);
+  background-color: #0b5ed7;
 }
 
 .reset-button:active,
 .mode-button:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 3px var(--border);
+  transform: translateY(1px);
+}
+
+@media (max-width: 420px) {
+  .game-board {
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+  }
+  .cell {
+    font-size: 2em;
+  }
 }
