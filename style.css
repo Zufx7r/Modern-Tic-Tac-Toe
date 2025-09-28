@@ -1,132 +1,93 @@
 :root {
-    --primary-bg: #141414; /* Deeper dark background */
-    --secondary-bg: #212121; /* Slightly lighter for the main container */
-    --text-color: #f0f0f0;
-    --border-color: #333; /* For subtle cell borders/separators */
-    --hover-bg: #2d2d2d; /* Subtle hover for cells */
-    --x-color: #e74c3c; /* Red for X */
-    --o-color: #3498db; /* Blue for O */
-    --win-color: #27ae60; /* Green for win */
-    --box-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5); /* More subtle, deeper shadow */
+  --bg-color: #1e1e1e;
+  --cell-bg: #2c2c2c;
+  --cell-hover: #3a3a3a;
+  --text-color: #f5f5f5;
+  --accent-color: #00c896;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--primary-bg);
-    color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    box-sizing: border-box;
-    padding: 20px;
-    -webkit-font-smoothing: antialiased; /* Better text rendering */
-    -moz-osx-font-smoothing: grayscale; /* Better text rendering */
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .container {
-    background-color: var(--secondary-bg);
-    border-radius: 8px; /* Slightly less rounded */
-    box-shadow: var(--box-shadow-dark);
-    padding: 30px; /* Reduced padding for compactness */
-    text-align: center;
-    max-width: 380px; /* More compact overall width */
-    width: 100%;
-    display: flex; /* Use flex for internal layout */
-    flex-direction: column;
-    gap: 25px; /* Spacing between elements */
+  text-align: center;
+  background: #242424;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
-    font-size: 2em; /* Slightly smaller for compactness */
-    margin: 0; /* Remove default margin */
-    font-weight: 700;
-    color: var(--text-color);
+  margin-bottom: 20px;
+  font-size: 2.2em;
+  color: var(--accent-color);
 }
 
 .game-board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 1px; /* Very thin gap for the 'lines' */
-    width: 270px; /* Smaller board */
-    height: 270px;
-    margin: 0 auto; /* Center the board */
-    background-color: var(--border-color); /* This creates the thin grid lines */
-    border-radius: 4px; /* Slightly rounded grid */
-    overflow: hidden; /* Ensures content doesn't overflow rounded corners */
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .cell {
-    background-color: var(--secondary-bg); /* Cells match container background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3em; /* Keep text large */
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.15s ease-in-out;
+  background-color: var(--cell-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.cell:hover:not(.x):not(.o) {
-    background-color: var(--hover-bg);
-}
-
-.cell.x {
-    color: var(--x-color);
-}
-
-.cell.o {
-    color: var(--o-color);
-}
-
-.cell.winning {
-    background-color: var(--win-color);
-    color: var(--text-color);
+.cell:hover {
+  background-color: var(--cell-hover);
 }
 
 .game-status {
-    font-size: 1.2em; /* Slightly smaller status text */
-    margin: 0; /* Remove default margin */
-    font-weight: 400;
-    color: var(--text-color);
+  margin: 15px 0;
+  font-size: 1.1em;
+  font-weight: 600;
 }
 
-.reset-button {
-    background-color: #4a4a4a; /* Darker, more integrated look */
-    color: var(--text-color);
-    border: none;
-    padding: 12px 20px; /* Compact padding */
-    border-radius: 6px; /* Slightly less rounded */
-    font-size: 1em; /* Smaller font for button */
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle button shadow */
-    align-self: stretch; /* Make button fill available width */
+.reset-button,
+.mode-button {
+  background-color: #4a4a4a;
+  color: var(--text-color);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  align-self: stretch;
+  margin-top: 8px;
+  display: block;
+  width: 100%;
 }
 
-.reset-button:hover {
-    background-color: #5a5a5a; /* Lighter hover */
-    transform: translateY(-1px);
+.reset-button:hover,
+.mode-button:hover {
+  background-color: #5a5a5a;
+  transform: translateY(-1px);
 }
 
-.reset-button:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive adjustments */
-@media (max-width: 420px) {
-    .container {
-        padding: 25px 20px;
-    }
-    .game-board {
-        width: 240px;
-        height: 240px;
-    }
-    .cell {
-        font-size: 2.5em;
-    }
+.reset-button:active,
+.mode-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
