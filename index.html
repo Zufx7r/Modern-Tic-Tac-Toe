@@ -1,194 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <link rel="stylesheet" href="default.css"/> 
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tic Tac Toe</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0f0f0f;
-      font-family: Arial, sans-serif;
-      color: #e0e0e0;
-    }
-
-    .container {
-      text-align: center;
-    }
-
-    button {
-      padding: 15px 40px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 12px;
-      background: #1a1a1a;
-      color: #e0e0e0;
-      box-shadow: 6px 6px 12px #050505,
-                  -6px -6px 12px #1e1e1e;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      animation: pulse 2s infinite ease-in-out;
-    }
-
-    button:hover {
-      box-shadow: inset 6px 6px 12px #050505,
-                  inset -6px -6px 12px #1e1e1e;
-      animation: none; /* Stop pulsing on hover */
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 6px 6px 12px #050505,
-                    -6px -6px 12px #1e1e1e;
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 8px 8px 16px #050505,
-                    -8px -8px 16px #1e1e1e;
-      }
-    }
-
-    .loading {
-      font-size: 1.5rem;
-      display: none;
-    }
-
-    .board {
-      display: none;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .board.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .cell {
-      width: 100px;
-      height: 100px;
-      font-size: 2.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #1a1a1a;
-      border-radius: 16px;
-      box-shadow: 6px 6px 12px #050505,
-                  -6px -6px 12px #1e1e1e;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .cell:hover {
-      box-shadow: inset 6px 6px 12px #050505,
-                  inset -6px -6px 12px #1e1e1e;
-    }
-
-    .winner {
-      margin-top: 20px;
-      font-size: 1.3rem;
-      color: #4cafef;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .winner.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <button id="playBtn">Play</button>
-    <div id="loading" class="loading">Loading...</div>
-    <div id="board" class="board"></div>
-    <div id="winner" class="winner"></div>
+    <h1>Modern Tic Tac Toe</h1>
+    <div class="game-board">
+      <div class="cell" data-cell-index="0"></div>
+      <div class="cell" data-cell-index="1"></div>
+      <div class="cell" data-cell-index="2"></div>
+      <div class="cell" data-cell-index="3"></div>
+      <div class="cell" data-cell-index="4"></div>
+      <div class="cell" data-cell-index="5"></div>
+      <div class="cell" data-cell-index="6"></div>
+      <div class="cell" data-cell-index="7"></div>
+      <div class="cell" data-cell-index="8"></div>
+    </div>
+    <div class="game-status">Player X's Turn</div>
+    <button class="mode-button">Switch to Impossible AI</button>
+    <button class="reset-button">Reset Game</button>
   </div>
-
-  <script>
-    const playBtn = document.getElementById('playBtn');
-    const loading = document.getElementById('loading');
-    const board = document.getElementById('board');
-    const winnerText = document.getElementById('winner');
-
-    let currentPlayer = "X";
-    let gameActive = true;
-    let cells = [];
-
-    playBtn.addEventListener('click', () => {
-      playBtn.style.display = 'none';
-      loading.style.display = 'block';
-
-      setTimeout(() => {
-        loading.style.display = 'none';
-        board.style.display = 'grid';
-        requestAnimationFrame(() => board.classList.add('show')); // fade-in
-        initBoard();
-      }, 1500);
-    });
-
-    function initBoard() {
-      board.innerHTML = '';
-      cells = Array(9).fill(null);
-      gameActive = true;
-      winnerText.textContent = '';
-      winnerText.classList.remove('show');
-
-      for (let i = 0; i < 9; i++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.addEventListener('click', () => handleClick(i, cell));
-        board.appendChild(cell);
-      }
-    }
-
-    function handleClick(index, cell) {
-      if (!gameActive || cells[index]) return;
-
-      cells[index] = currentPlayer;
-      cell.textContent = currentPlayer;
-
-      if (checkWin()) {
-        winnerText.textContent = `${currentPlayer} Wins! 🎉`;
-        winnerText.classList.add('show');
-        gameActive = false;
-        return;
-      }
-
-      if (!cells.includes(null)) {
-        winnerText.textContent = "It's a Draw!";
-        winnerText.classList.add('show');
-        gameActive = false;
-        return;
-      }
-
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
-    }
-
-    function checkWin() {
-      const winPatterns = [
-        [0,1,2],[3,4,5],[6,7,8], // rows
-        [0,3,6],[1,4,7],[2,5,8], // cols
-        [0,4,8],[2,4,6]          // diagonals
-      ];
-
-      return winPatterns.some(pattern =>
-        pattern.every(index => cells[index] === currentPlayer)
-      );
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
