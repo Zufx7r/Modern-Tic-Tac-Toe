@@ -1,13 +1,14 @@
 :root {
-  --bg: #f8f9fa;
-  --card-bg: #ffffff;
-  --text: #212529;
-  --text-muted: #6c757d;
-  --primary: #0d6efd;
-  --border: #dee2e6;
-  --win: #198754;
-  --danger: #dc3545;
-  --info: #0dcaf0;
+  --bg: hsl(0 0% 98%);
+  --card-bg: hsl(0 0% 100%);
+  --border: hsl(240 5% 90%);
+  --text: hsl(240 10% 3.9%);
+  --text-muted: hsl(240 5% 40%);
+  --primary: hsl(240 5% 15%);
+  --primary-hover: hsl(240 5% 10%);
+  --x: hsl(0 84% 60%);   /* red */
+  --o: hsl(217 91% 60%); /* blue */
+  --win: hsl(142 72% 29%); /* green */
 }
 
 body {
@@ -24,18 +25,19 @@ body {
 
 .container {
   background: var(--card-bg);
-  padding: 30px;
+  border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 28px;
   text-align: center;
-  max-width: 400px;
+  max-width: 380px;
   width: 100%;
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 1.6rem;
   margin-bottom: 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -43,17 +45,17 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-  gap: 8px;
+  gap: 6px;
   margin: 0 auto 20px;
 }
 
 .cell {
-  background-color: var(--bg);
+  background-color: var(--card-bg);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.5em;
-  font-weight: bold;
+  font-size: 2.3rem;
+  font-weight: 600;
   color: var(--text);
   cursor: pointer;
   border: 1px solid var(--border);
@@ -62,26 +64,25 @@ h1 {
 }
 
 .cell:hover:not(.x):not(.o) {
-  background-color: var(--info);
-  color: #fff;
+  background-color: hsl(240 5% 96%);
 }
 
 .cell.x {
-  color: var(--danger);
+  color: var(--x);
 }
 
 .cell.o {
-  color: var(--primary);
+  color: var(--o);
 }
 
 .cell.winning {
   background-color: var(--win);
-  color: #fff;
+  color: white;
 }
 
 .game-status {
-  font-size: 1.1em;
-  margin: 15px 0;
+  font-size: 0.95rem;
+  margin: 12px 0;
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -89,12 +90,12 @@ h1 {
 .reset-button,
 .mode-button {
   background-color: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-size: 1em;
-  font-weight: 600;
+  color: white;
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, transform 0.1s;
   width: 100%;
@@ -103,7 +104,7 @@ h1 {
 
 .reset-button:hover,
 .mode-button:hover {
-  background-color: #0b5ed7;
+  background-color: var(--primary-hover);
 }
 
 .reset-button:active,
@@ -117,6 +118,6 @@ h1 {
     grid-template-rows: repeat(3, 80px);
   }
   .cell {
-    font-size: 2em;
+    font-size: 2rem;
   }
 }
