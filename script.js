@@ -1,118 +1,121 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const cells = Array.from(document.querySelectorAll('.cell'));
-  const gameStatus = document.querySelector('.game-status');
-  const resetButton = document.querySelector('.reset-button');
+<script>
+const cells = document.querySelectorAll(".cell");
+const statusText = document.getElementById("status");
+let board = ["", "", "", "", "", "", "", "", ""];
+let currentPlayer = "X";
+let gameActive = true;
+let singlePlayer = true; // set to false if you want only 2-player mode
 
-  let currentPlayer = 'X';  // human
-  let board = ['', '', '', '', '', '', '', '', ''];
-  let isGameActive = true;
+const winPatterns = [
+  [0,1,2],[3,4,5],[6,7,8], // rows
+  [0,3,6],[1,4,7],[2,5,8], // cols
+  [0,4,8],[2,4,6]          // diagonals
+];
 
-  const winningConditions = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
-  ];
+function handleClick(e) {
+  const index = e.target.getAttribute("data-index");
 
-  async function getAIMove(board, player) {
-    // Notice: using absolute path to your API on neoxsite
-    const res = await fetch(
-      "https://neoxsite.netlify.app/.netlify/functions/tictactoe",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ board, player })
-      }
-    );
-    const data = await res.json();
-    return data.bestMove;
+  if (board[index] !== "" || !gameActive) return;
+
+  board[index] = currentPlayer;
+  e.target.innerText = currentPlayer;
+
+  if (checkWinner(board, currentPlayer)) {
+    statusText.innerText = currentPlayer + " Wins!";
+    gameActive = false;
+    return;
   }
 
-  function handleResultValidation() {
-    let roundWon = false;
-    for (let i = 0; i < winningConditions.length; i++) {
-      const [aIndex, bIndex, cIndex] = winningConditions[i];
-      let a = board[aIndex];
-      let b = board[bIndex];
-      let c = board[cIndex];
-
-      if (a === '' || b === '' || c === '') continue;
-      if (a === b && b === c) {
-        roundWon = true;
-        [aIndex, bIndex, cIndex].forEach(i => {
-          cells[i].classList.add('winning');
-        });
-        break;
-      }
-    }
-
-    if (roundWon) {
-      gameStatus.textContent = `Player ${currentPlayer} has won!`;
-      isGameActive = false;
-      return true;
-    }
-
-    if (!board.includes('')) {
-      gameStatus.textContent = `It's a draw!`;
-      isGameActive = false;
-      return true;
-    }
-
-    return false;
+  if (!board.includes("")) {
+    statusText.innerText = "Draw!";
+    gameActive = false;
+    return;
   }
 
-  async function changePlayer() {
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    gameStatus.textContent = `Player ${currentPlayer}'s Turn`;
+  currentPlayer = currentPlayer === "X" ? "O" : "X";
 
-    // If it's AI’s turn
-    if (currentPlayer === 'O' && isGameActive) {
-      // Let the API decide the move
-      const bestMove = await getAIMove(board, currentPlayer);
-      // If the response is valid
-      if (typeof bestMove === 'number') {
-        const cell = cells[bestMove];
-        if (cell && board[bestMove] === '') {
-          board[bestMove] = currentPlayer;
-          cell.textContent = currentPlayer;
-          cell.classList.add(currentPlayer.toLowerCase());
-          if (!handleResultValidation()) {
-            // Continue the game
-            changePlayer();
-          }
-        }
-      } else {
-        console.error("API returned invalid bestMove:", bestMove);
+  if (singlePlayer && currentPlayer === "O" && gameActive) {
+    aiMove();
+  }
+}
+
+function aiMove() {
+  let bestScore = -Infinity;
+  let move;
+
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] === "") {
+      board[i] = "O";
+      let score = minimax(board, 0, false);
+      board[i] = "";
+      if (score > bestScore) {
+        bestScore = score;
+        move = i;
       }
     }
   }
 
-  function userAction(cell, index) {
-    if (!isGameActive || board[index] !== '' || currentPlayer !== 'X') {
-      return;
-    }
-    board[index] = currentPlayer;
-    cell.textContent = currentPlayer;
-    cell.classList.add(currentPlayer.toLowerCase());
-    if (!handleResultValidation()) {
-      changePlayer();
-    }
+  board[move] = "O";
+  cells[move].innerText = "O";
+
+  if (checkWinner(board, "O")) {
+    statusText.innerText = "O Wins!";
+    gameActive = false;
+    return;
   }
 
-  function resetGame() {
-    board = ['', '', '', '', '', '', '', '', ''];
-    isGameActive = true;
-    currentPlayer = 'X';
-    gameStatus.textContent = `Player ${currentPlayer}'s Turn`;
-
-    cells.forEach(cell => {
-      cell.textContent = '';
-      cell.classList.remove('x', 'o', 'winning');
-    });
+  if (!board.includes("")) {
+    statusText.innerText = "Draw!";
+    gameActive = false;
+    return;
   }
 
-  cells.forEach((cell, index) => {
-    cell.addEventListener('click', () => userAction(cell, index));
-  });
-  resetButton.addEventListener('click', resetGame);
+  currentPlayer = "X";
+}
 
+function minimax(newBoard, depth, isMaximizing) {
+  if (checkWinner(newBoard, "O")) return 10 - depth;
+  if (checkWinner(newBoard, "X")) return depth - 10;
+  if (!newBoard.includes("")) return 0;
+
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    for (let i = 0; i < newBoard.length; i++) {
+      if (newBoard[i] === "") {
+        newBoard[i] = "O";
+        let score = minimax(newBoard, depth + 1, false);
+        newBoard[i] = "";
+        bestScore = Math.max(score, bestScore);
+      }
+    }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < newBoard.length; i++) {
+      if (newBoard[i] === "") {
+        newBoard[i] = "X";
+        let score = minimax(newBoard, depth + 1, true);
+        newBoard[i] = "";
+        bestScore = Math.min(score, bestScore);
+      }
+    }
+    return bestScore;
+  }
+}
+
+function checkWinner(b, player) {
+  return winPatterns.some(pattern =>
+    pattern.every(index => b[index] === player)
+  );
+}
+
+cells.forEach(cell => cell.addEventListener("click", handleClick));
+
+document.getElementById("restart").addEventListener("click", () => {
+  board = ["", "", "", "", "", "", "", "", ""];
+  currentPlayer = "X";
+  gameActive = true;
+  statusText.innerText = "X's Turn";
+  cells.forEach(cell => cell.innerText = "");
 });
+</script>
